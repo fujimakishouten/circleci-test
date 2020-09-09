@@ -24,4 +24,8 @@ workflows:
   message:
     jobs:
       - message
+  hello_message:
+    jobs:
+      - hello
+      - message
 
