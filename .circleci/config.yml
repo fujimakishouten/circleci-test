@@ -4,6 +4,12 @@ executors:
     docker:
       - image: docker:stable
 jobs:
+  build:
+    executor: default
+    steps:
+      - run:
+          name: "Build test"
+          command: echo "Build test"
   hello:
     executor: default
     steps:
