@@ -1,0 +1,27 @@
+version: 2.1
+executors:
+  default:
+    docker:
+      - image: docker:stable
+job:
+  hello:
+    executor: default
+    steps:
+      - run:
+          name: "Say hello"
+          command: echo "Hello, world."
+  message:
+    executor: default
+    steps:
+      - run:
+          name: "Show message"
+          command: echo "Fight dayo!"
+workflows:
+  version: 2
+  hello:
+    jobs:
+      - hello
+  message:
+    jobs:
+      - message
+
