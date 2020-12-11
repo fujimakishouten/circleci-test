@@ -8,6 +8,8 @@ jobs:
     executor: default
     steps:
       - checkout
+      - attach_workspace:
+          at: ./artifacts
       - run:
           name: Run build
           command: go build hello.go
