@@ -4,6 +4,12 @@ executors:
     docker:
       - image: circleci/golang:1.15.6-buster
 jobs:
+  build:
+    executor: default
+    steps:
+      - run:
+          name: Run build
+          command: go build hello.go
   setup:
     executor: default
     steps:
@@ -29,3 +35,6 @@ workflows:
       - message:
           requires:
             - setup
+      - build:
+          requires:
+            - message
