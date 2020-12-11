@@ -13,9 +13,9 @@ jobs:
           command: go build hello.go
       - run:
           name: Archive files
-          command: tar cJf /tmp/hello.tar.xz hello
+          command: tar cJf hello.tar.xz hello
       - store_artifacts:
-          path: /hello.tar.xz
+          path: hello.tar.xz
   setup:
     executor: default
     steps:
