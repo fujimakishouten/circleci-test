@@ -15,7 +15,7 @@ jobs:
           path: hello
           destination: ./artifacts
       - persist_to_workspace:
-          root: ./artifacts
+          root: .
           paths:
             - hello
   release:
