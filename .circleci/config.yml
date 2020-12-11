@@ -11,11 +11,21 @@ jobs:
       - run:
           name: Run build
           command: go build hello.go
-      - run:
-          name: Archive files
-          command: tar cJf hello.tar.xz hello
       - store_artifacts:
-          path: hello.tar.xz
+          path: hello
+          destination: ./artifacts
+  release:
+    executor: default
+    steps:
+      - run:
+          name: Install ghr
+          command: go get -u github.com/tcnksm/ghr
+      - attach_workspace:
+          at: ./artifacts
+      - run:
+          name: "Release"
+          command: |
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.0.1 ./artifacts/
   setup:
     executor: default
     steps:
@@ -45,3 +55,6 @@ workflows:
       - build:
           requires:
             - message
+      - release:
+          required:
+            - build
