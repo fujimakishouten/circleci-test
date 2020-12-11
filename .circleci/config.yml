@@ -8,14 +8,13 @@ jobs:
     executor: default
     steps:
       - checkout
-      - attach_workspace:
-          at: ./artifacts
       - run:
           name: Run build
           command: go build hello.go
-      - store_artifacts:
-          path: hello
-          destination: ./artifacts
+      - persist_to_workspace:
+          root: ./artifacts
+          paths:
+            - hello
   release:
     executor: default
     steps:
