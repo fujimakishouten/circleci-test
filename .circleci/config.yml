@@ -1,4 +1,4 @@
-version: 2.1
+gersion: 2.1
 executors:
     default:
         docker:
@@ -21,7 +21,7 @@ jobs:
                     command: |
                         sudo docker run --interactive --rm --tty \
                             --name alpine alpine:edge \
-                            echo 'Fight dayo!'"
+                            echo 'Fight dayo!'
 workflows:
     version: 2
     hello:
