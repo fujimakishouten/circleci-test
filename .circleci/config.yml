@@ -56,5 +56,5 @@ workflows:
           requires:
             - message
       - release:
-          required:
+          requires:
             - build
