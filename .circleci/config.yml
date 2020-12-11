@@ -12,14 +12,14 @@ jobs:
                   command: apt update
             - run:
                   name: Install dependencies
-                  command: apt install build-essential ruby ruby-bundler
+                  command: sudo apt install build-essential ruby ruby-bundler
     hello:
         executor: default
         steps:
             -   run:
                     name: "Say hello"
                     command: |
-                        docker run --interactive --rm --tty \
+                        sudo docker run --interactive --rm --tty \
                             --name alpine alpine:edge \
                             echo 'Fight dayo!'"
 workflows:
