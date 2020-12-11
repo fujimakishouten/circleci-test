@@ -19,7 +19,7 @@ jobs:
     steps:
       - run:
           name: "Show message"
-          command: echo "Fight dayo!"
+          command: docker run --interactive --rm --tty --name alpine alpine:edge echo 'Fight dayo!'
 workflows:
   version: 2
   test:
