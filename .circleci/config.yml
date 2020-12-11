@@ -10,6 +10,11 @@ jobs:
       - run:
           name: Run build
           command: go build hello.go
+      - run:
+          name: Archive files
+          command: tar cJf /tmp/hello.tar.xz hello.go
+      - store_artifacts:
+          path: /tmp/hello.tar.xz
   setup:
     executor: default
     steps:
@@ -20,6 +25,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt install build-essential ruby ruby-bundler
+      - checkout
   message:
     executor: default
     steps:
