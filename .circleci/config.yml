@@ -2,20 +2,18 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: docker:stable
+      - image: circleci/golang:1.15.6-buster
 jobs:
-  build:
+  setup:
     executor: default
     steps:
       - run:
-          name: "Build test"
-          command: echo "Build test"
-  hello:
-    executor: default
-    steps:
+          name: Update apt cache
+          command: sudo apt update
       - run:
-          name: "Say hello"
-          command: echo "Hello, world."
+          name: Install dependencies
+          command: |
+            sudo apt install build-essential ruby ruby-bundler
   message:
     executor: default
     steps:
@@ -24,14 +22,7 @@ jobs:
           command: echo "Fight dayo!"
 workflows:
   version: 2
-  hello:
+  test:
     jobs:
-      - hello
-  message:
-    jobs:
+      - setup
       - message
-  hello_message:
-    jobs:
-      - hello
-      - message
-
