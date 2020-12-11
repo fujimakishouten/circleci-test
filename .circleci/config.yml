@@ -11,6 +11,9 @@ jobs:
       - run:
           name: Run build
           command: go build hello.go
+      - store_artifacts:
+          path: hello
+          destination: ./artifacts
       - persist_to_workspace:
           root: ./artifacts
           paths:
