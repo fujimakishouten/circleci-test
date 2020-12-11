@@ -26,4 +26,6 @@ workflows:
   test:
     jobs:
       - setup
-      - message
+      - message:
+          requires:
+            - setup
