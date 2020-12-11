@@ -1,37 +1,30 @@
 version: 2.1
 executors:
-  default:
-    docker:
-      - image: docker:stable
+    default:
+        docker:
+            -   image: circleci/golang:1.15.6-buster
 jobs:
-  build:
-    executor: default
-    steps:
-      - run:
-          name: "Build test"
-          command: echo "Build test"
-  hello:
-    executor: default
-    steps:
-      - run:
-          name: "Say hello"
-          command: echo "Hello, world."
-  message:
-    executor: default
-    steps:
-      - run:
-          name: "Show message"
-          command: echo "Fight dayo!"
+    setup:
+        executor: default
+        steps:
+            - run:
+                  name: Update cache
+                  command: apt update
+            - run:
+                  name: Install dependencies
+                  command: apt install build-essential ruby ruby-bundler
+    hello:
+        executor: default
+        steps:
+            -   run:
+                    name: "Say hello"
+                    command: |
+                        docker run --interactive --rm --tty \
+                            --name alpine alpine:edge \
+                            echo 'Fight dayo!'"
 workflows:
-  version: 2
-  hello:
-    jobs:
-      - hello
-  message:
-    jobs:
-      - message
-  hello_message:
-    jobs:
-      - hello
-      - message
-
+    version: 2
+    hello:
+        jobs:
+            - setup
+            - hello
