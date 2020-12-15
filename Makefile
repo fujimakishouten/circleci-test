@@ -4,4 +4,4 @@ release:
 
 .PHONY: install
 install:
-	ls
+	echo "Install ... OK"

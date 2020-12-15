@@ -39,7 +39,7 @@ jobs:
             make install
       - run:
           name: Run lint
-          command: mecho "lint ... OK"
+          command: echo "lint ... OK"
   publish:
     executor: default
     steps:
