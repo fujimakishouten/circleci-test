@@ -52,7 +52,7 @@ jobs:
           name: Prepare
           command: |
             cd ./artfacts/build/release
-            zip -9 -r ./artifacts/build/release/hello.zip hello
+            zip -9 -r ./artifacts/release/hello.zip hello
       - run:
           name: Release hello
           command: |
@@ -61,7 +61,7 @@ jobs:
                 -u ${CIRCLE_PROJECT_USERNAME} \
                 -r ${CIRCLE_PROJECT_REPONAME} \
                 -c ${CIRCLE_SHA1} \
-                -delete ${VERSION} ./artifacts/build/release/hello.zip
+                -delete ${VERSION} ./artifacts/release/hello.zip
   test:
     executor: default
     steps:
