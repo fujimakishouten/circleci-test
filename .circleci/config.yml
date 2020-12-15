@@ -11,33 +11,83 @@ jobs:
       - checkout
       - run:
           name: Build hello
-          command: ./scripts/build.sh
+          command: make release
       - persist_to_workspace:
-          root: build
+          root: ./build
           paths:
-            - release/*
-  release:
+            - ./release/*
+  e2e:
+    executor: default
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            sudo apt install --yes ruby-bundler
+      - run:
+          name: Run e2e tests
+          command: echo "e2e test ... OK"
+  lint:
+    executor: default
+    steps:
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            sudo apt install --yes ruby-bundler
+            make install
+      - run:
+          name: Run lint
+          command: mecho "lint ... OK"
+  publish:
     executor: default
     steps:
       - attach_workspace:
-            at: ./artifacts
+          at: ./artifacts
       - run:
-          name: Install ghr
+          name: Setup
           command: go get -u github.com/tcnksm/ghr
       - run:
           name: Prepare
           command: |
-            cd ./artifacts/release
-            zip -9 -r hello.zip ./hello
+            cd ./artfacts/build/release
+            zip -9 -r ./artifacts/build/release/hello.zip hello
       - run:
-          name: Publish
+          name: Release hello
           command: |
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.0.1 ./artifacts/release/hello.zip
+            VERSION=$(./artifacts/build/release/hello/linux-amd64/bin/hello --version | tr -d "\r\n")
+            ghr -t ${GITHUB_TOKEN} \
+                -u ${CIRCLE_PROJECT_USERNAME} \
+                -r ${CIRCLE_PROJECT_REPONAME} \
+                -c ${CIRCLE_SHA1} \
+                -delete ${VERSION} ./artifacts/build/release/hello.zip
+  test:
+    executor: default
+    steps:
+      - checkout
+      - run:
+          name: Run unit tests
+          command: echo "Test ... OK"
+
 workflows:
   version: 2
-  release:
+  build:
     jobs:
-      - build
-      - release:
+      - lint
+      - test
+      - e2e
+      - build:
+          filters:
+            branches:
+              only: master
+          requires:
+            - lint
+            - test
+            - e2e
+      - publish:
+          filters:
+            branches:
+              only: master
           requires:
             - build
