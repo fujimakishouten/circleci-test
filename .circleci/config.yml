@@ -9,12 +9,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run build
-          command: go build hello.go
+          name: Build hello
+          command: ./script/build.sh
       - persist_to_workspace:
           root: .
           paths:
-            - hello
+            - ./build/release/*
   release:
     executor: default
     steps:
@@ -27,35 +27,11 @@ jobs:
           name: "Release"
           command: |
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.0.1 ./artifacts/
-  setup:
-    executor: default
-    steps:
-      - run:
-          name: Update apt cache
-          command: sudo apt update
-      - run:
-          name: Install dependencies
-          command: |
-            sudo apt install build-essential ruby ruby-bundler
-      - checkout
-  message:
-    executor: default
-    steps:
-      - setup_remote_docker
-      - run:
-          name: "Show message"
-          command: docker run --interactive --rm --tty --name alpine alpine:edge echo 'Fight dayo!'
 workflows:
   version: 2
-  test:
+  build:
     jobs:
-      - setup
-      - message:
-          requires:
-            - setup
-      - build:
-          requires:
-            - message
-      - release:
-          requires:
-            - build
+      - build
+  release:
+    jobs:
+      - release
