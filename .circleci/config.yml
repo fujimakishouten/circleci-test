@@ -51,12 +51,12 @@ jobs:
       - run:
           name: Prepare
           command: |
-            cd ./artfacts/build/release
+            cd ./artfacts/release
             zip -9 -r ./artifacts/release/hello.zip hello
       - run:
           name: Release hello
           command: |
-            VERSION=$(./artifacts/build/release/hello/linux-amd64/bin/hello --version | tr -d "\r\n")
+            VERSION=$(./artifacts/release/hello/linux-amd64/bin/hello --version | tr -d "\r\n")
             ghr -t ${GITHUB_TOKEN} \
                 -u ${CIRCLE_PROJECT_USERNAME} \
                 -r ${CIRCLE_PROJECT_REPONAME} \
