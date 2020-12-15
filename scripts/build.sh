@@ -25,7 +25,7 @@ do
     for ARCHITECTURE in amd64
     do
       GOOS=$OS GOARCH=$ARCHITECTURE go build -a -ldflags '-w -s -X main.revision=$(GIT_REVISION) -extldflags "-static"' \
-          -o $DIRECTORY/build/release/$OS-$ARCHITECTURE/bin/$OUTPUT_FILE \
+          -o $DIRECTORY/build/release/$BASENAME/$OS-$ARCHITECTURE/bin/$OUTPUT_FILE \
           $DIRECTORY/cmd/hello/hello.go
     done
 done

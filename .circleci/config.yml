@@ -3,6 +3,7 @@ executors:
   default:
     docker:
       - image: circleci/golang:1.15.6-buster
+    working_directory: ~/hello
 jobs:
   build:
     executor: default
@@ -18,15 +19,18 @@ jobs:
   release:
     executor: default
     steps:
+      - attach_workspace:
+            at: ./artifacts
       - run:
           name: Install ghr
           command: go get -u github.com/tcnksm/ghr
-      - attach_workspace:
-          at: ./artifacts
       - run:
-          name: "Release"
+          name: Prepare
+          command: zip -9 -r hello.zip ./artifacts/release/hello
+      - run:
+          name: Publish
           command: |
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.0.1 ./artifacts/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete 0.0.1 hello.zip
 workflows:
   version: 2
   release:
