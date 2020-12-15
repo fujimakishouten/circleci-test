@@ -12,9 +12,9 @@ jobs:
           name: Build hello
           command: ./scripts/build.sh
       - persist_to_workspace:
-          root: ./build/release
+          root: build
           paths:
-            - .
+            - release/*
   release:
     executor: default
     steps:
