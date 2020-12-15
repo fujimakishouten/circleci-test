@@ -4,7 +4,24 @@ executors:
     docker:
       - image: circleci/golang:1.15.6-buster
     working_directory: ~/hello
+
 jobs:
+  tests:
+    executor: default
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            sudo apt install --yes ruby-bundler
+            make install
+      - run:
+          name: Run e2e tests
+          command: |
+            make lint
+            make test
+            make e2e
   build:
     executor: default
     steps:
@@ -16,30 +33,6 @@ jobs:
           root: ./build
           paths:
             - ./release/*
-  e2e:
-    executor: default
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run:
-          name: Setup
-          command: |
-            sudo apt install --yes ruby-bundler
-      - run:
-          name: Run e2e tests
-          command: echo "e2e test ... OK"
-  lint:
-    executor: default
-    steps:
-      - checkout
-      - run:
-          name: Setup
-          command: |
-            sudo apt install --yes ruby-bundler
-            make install
-      - run:
-          name: Run lint
-          command: echo "lint ... OK"
   publish:
     executor: default
     steps:
@@ -56,35 +49,24 @@ jobs:
       - run:
           name: Release hello
           command: |
-            VERSION=$(./artifacts/release/hello/linux-amd64/bin/hello --version | tr -d "\r\n")
+            VERSION=$(./artifacts/release/hello/linux-amd64/bin/hello --version | cut -d " " -f 3 | tr -d "\r\n")
             ghr -t ${GITHUB_TOKEN} \
                 -u ${CIRCLE_PROJECT_USERNAME} \
                 -r ${CIRCLE_PROJECT_REPONAME} \
                 -c ${CIRCLE_SHA1} \
                 -delete ${VERSION} ./artifacts/release/hello.zip
-  test:
-    executor: default
-    steps:
-      - checkout
-      - run:
-          name: Run unit tests
-          command: echo "Test ... OK"
 
 workflows:
   version: 2
   build:
     jobs:
-      - lint
-      - test
-      - e2e
+      - tests
       - build:
           filters:
             branches:
               only: master
           requires:
-            - lint
-            - test
-            - e2e
+            - tests
       - publish:
           filters:
             branches:
