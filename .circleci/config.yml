@@ -51,8 +51,8 @@ jobs:
       - run:
           name: Prepare
           command: |
-            cd ./artfacts/release
-            zip -9 -r ./artifacts/release/hello.zip hello
+            cd ./artifacts/release
+            zip -9 -r ./hello.zip hello
       - run:
           name: Release hello
           command: |
