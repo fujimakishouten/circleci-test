@@ -62,9 +62,8 @@ workflows:
     jobs:
       - tests:
           filters:
-            filters:
-              tags:
-                only: /.*/
+            tags:
+              only: /.*/
       - build:
           filters:
             filters:
